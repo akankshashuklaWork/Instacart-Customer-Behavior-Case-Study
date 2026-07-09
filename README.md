@@ -98,8 +98,6 @@ A few details that tripped me up at first:
 
 Main join: `orders.user_id` → `user_departments.user_id`. Department-level stats are pre-aggregated so the analysis queries don't need to touch 33M rows.
 
-<details>
-
 
 **After ETL:**
 
