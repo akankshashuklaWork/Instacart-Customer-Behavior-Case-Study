@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="658">
+<rect width="100%" height="100%" fill="#fafafa"/>
+<text x="20" y="24" font-family="Arial" font-size="16" font-weight="bold">Reorder Rate by Department</text>
+<line x1="160" y1="30" x2="700" y2="30" stroke="#ccc"/>
+<line x1="160" y1="30" x2="160" y2="638" stroke="#ccc"/>
+<line x1="617.9" y1="30" x2="617.9" y2="638" stroke="#3498db" stroke-dasharray="4,3"/>
+<text x="621.9" y="26" font-family="Arial" font-size="11" fill="#3498db">59% avg</text>
+<text x="8" y="55" font-family="Arial" font-size="12">dairy eggs</text>
+<rect x="160" y="40" width="520.0" height="22" fill="#2ecc71" rx="3"/>
+<text x="686.0" y="55" font-family="Arial" font-size="12">67.0%</text>
+<text x="8" y="83" font-family="Arial" font-size="12">beverages</text>
+<rect x="160" y="68" width="507.6" height="22" fill="#2ecc71" rx="3"/>
+<text x="673.6" y="83" font-family="Arial" font-size="12">65.4%</text>
+<text x="8" y="111" font-family="Arial" font-size="12">produce</text>
+<rect x="160" y="96" width="505.3" height="22" fill="#2ecc71" rx="3"/>
+<text x="671.3" y="111" font-family="Arial" font-size="12">65.1%</text>
+<text x="8" y="139" font-family="Arial" font-size="12">bakery</text>
+<rect x="160" y="124" width="487.4" height="22" fill="#2ecc71" rx="3"/>
+<text x="653.4" y="139" font-family="Arial" font-size="12">62.8%</text>
+<text x="8" y="167" font-family="Arial" font-size="12">deli</text>
+<rect x="160" y="152" width="471.9" height="22" fill="#2ecc71" rx="3"/>
+<text x="637.9" y="167" font-family="Arial" font-size="12">60.8%</text>
+<text x="8" y="195" font-family="Arial" font-size="12">pets</text>
+<rect x="160" y="180" width="468.0" height="22" fill="#2ecc71" rx="3"/>
+<text x="634.0" y="195" font-family="Arial" font-size="12">60.3%</text>
+<text x="8" y="223" font-family="Arial" font-size="12">babies</text>
+<rect x="160" y="208" width="448.6" height="22" fill="#f39c12" rx="3"/>
+<text x="614.6" y="223" font-family="Arial" font-size="12">57.8%</text>
+<text x="8" y="251" font-family="Arial" font-size="12">bulk</text>
+<rect x="160" y="236" width="447.8" height="22" fill="#f39c12" rx="3"/>
+<text x="613.8" y="251" font-family="Arial" font-size="12">57.7%</text>
+<text x="8" y="279" font-family="Arial" font-size="12">snacks</text>
+<rect x="160" y="264" width="445.5" height="22" fill="#f39c12" rx="3"/>
+<text x="611.5" y="279" font-family="Arial" font-size="12">57.4%</text>
+<text x="8" y="307" font-family="Arial" font-size="12">alcohol</text>
+<rect x="160" y="292" width="443.2" height="22" fill="#f39c12" rx="3"/>
+<text x="609.2" y="307" font-family="Arial" font-size="12">57.1%</text>
+<text x="8" y="335" font-family="Arial" font-size="12">meat seafood</text>
+<rect x="160" y="320" width="441.6" height="22" fill="#f39c12" rx="3"/>
+<text x="607.6" y="335" font-family="Arial" font-size="12">56.9%</text>
+<text x="8" y="363" font-family="Arial" font-size="12">breakfast</text>
+<rect x="160" y="348" width="435.4" height="22" fill="#f39c12" rx="3"/>
+<text x="601.4" y="363" font-family="Arial" font-size="12">56.1%</text>
+<text x="8" y="391" font-family="Arial" font-size="12">frozen</text>
+<rect x="160" y="376" width="421.4" height="22" fill="#f39c12" rx="3"/>
+<text x="587.4" y="391" font-family="Arial" font-size="12">54.3%</text>
+<text x="8" y="419" font-family="Arial" font-size="12">dry goods pasta</text>
+<rect x="160" y="404" width="358.6" height="22" fill="#f39c12" rx="3"/>
+<text x="524.6" y="419" font-family="Arial" font-size="12">46.2%</text>
+<text x="8" y="447" font-family="Arial" font-size="12">canned goods</text>
+<rect x="160" y="432" width="356.2" height="22" fill="#f39c12" rx="3"/>
+<text x="522.2" y="447" font-family="Arial" font-size="12">45.9%</text>
+<text x="8" y="475" font-family="Arial" font-size="12">other</text>
+<rect x="160" y="460" width="315.9" height="22" fill="#e74c3c" rx="3"/>
+<text x="481.9" y="475" font-family="Arial" font-size="12">40.7%</text>
+<text x="8" y="503" font-family="Arial" font-size="12">household</text>
+<rect x="160" y="488" width="312.8" height="22" fill="#e74c3c" rx="3"/>
+<text x="478.8" y="503" font-family="Arial" font-size="12">40.3%</text>
+<text x="8" y="531" font-family="Arial" font-size="12">missing</text>
+<rect x="160" y="516" width="305.8" height="22" fill="#e74c3c" rx="3"/>
+<text x="471.8" y="531" font-family="Arial" font-size="12">39.4%</text>
+<text x="8" y="559" font-family="Arial" font-size="12">international</text>
+<rect x="160" y="544" width="287.2" height="22" fill="#e74c3c" rx="3"/>
+<text x="453.2" y="559" font-family="Arial" font-size="12">37.0%</text>
+<text x="8" y="587" font-family="Arial" font-size="12">pantry</text>
+<rect x="160" y="572" width="269.3" height="22" fill="#e74c3c" rx="3"/>
+<text x="435.3" y="587" font-family="Arial" font-size="12">34.7%</text>
+<text x="8" y="615" font-family="Arial" font-size="12">personal care</text>
+<rect x="160" y="600" width="249.9" height="22" fill="#e74c3c" rx="3"/>
+<text x="415.9" y="615" font-family="Arial" font-size="12">32.2%</text>
+</svg>

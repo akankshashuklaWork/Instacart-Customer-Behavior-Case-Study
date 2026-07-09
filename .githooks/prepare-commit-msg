@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+MSG_FILE="$1"
+sed -i '' '/^Co-authored-by: /d' "$MSG_FILE" 2>/dev/null \
+  || sed -i '/^Co-authored-by: /d' "$MSG_FILE"

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="420" viewBox="0 0 820 420">
+  <rect width="100%" height="100%" fill="#fafafa"/>
+  <text x="20" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Analytical Database ERD (instacart.db  after ETL)</text>
+
+  <!-- orders table -->
+  <rect x="40" y="60" width="220" height="200" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="4"/>
+  <rect x="40" y="60" width="220" height="28" fill="#3498db"/>
+  <text x="150" y="79" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">orders</text>
+  <text x="52" y="105" font-family="monospace" font-size="11">order_id (PK)</text>
+  <text x="52" y="122" font-family="monospace" font-size="11">user_id</text>
+  <text x="52" y="139" font-family="monospace" font-size="11">order_number</text>
+  <text x="52" y="156" font-family="monospace" font-size="11">cart_size</text>
+  <text x="52" y="173" font-family="monospace" font-size="11">reordered_items</text>
+  <text x="52" y="190" font-family="monospace" font-size="11">reorder_rate</text>
+  <text x="52" y="207" font-family="monospace" font-size="11">days_since_prior_order</text>
+  <text x="52" y="224" font-family="monospace" font-size="11">order_dow, order_hour</text>
+  <text x="52" y="241" font-family="monospace" font-size="11">distinct_departments</text>
+  <text x="150" y="252" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">3.4M rows</text>
+
+  <!-- user_departments table -->
+  <rect x="340" y="80" width="240" height="160" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="4"/>
+  <rect x="340" y="80" width="240" height="28" fill="#27ae60"/>
+  <text x="460" y="99" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">user_departments</text>
+  <text x="352" y="125" font-family="monospace" font-size="11">user_id (FK)</text>
+  <text x="352" y="142" font-family="monospace" font-size="11">department</text>
+  <text x="352" y="159" font-family="monospace" font-size="11">items</text>
+  <text x="352" y="176" font-family="monospace" font-size="11">reorders</text>
+  <text x="352" y="193" font-family="monospace" font-size="11">reorder_rate</text>
+  <text x="352" y="210" font-family="monospace" font-size="11">orders_with_dept</text>
+  <text x="460" y="228" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">2.3M rows</text>
+
+  <!-- products table -->
+  <rect x="340" y="280" width="240" height="120" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="4"/>
+  <rect x="340" y="280" width="240" height="28" fill="#9b59b6"/>
+  <text x="460" y="299" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">products</text>
+  <text x="352" y="325" font-family="monospace" font-size="11">product_id (PK)</text>
+  <text x="352" y="342" font-family="monospace" font-size="11">product_name</text>
+  <text x="352" y="359" font-family="monospace" font-size="11">aisle, department</text>
+  <text x="460" y="388" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">49K rows (standalone dimension)</text>
+
+  <!-- relationship: orders -> user_departments -->
+  <line x1="260" y1="140" x2="340" y2="140" stroke="#2c3e50" stroke-width="2"/>
+  <text x="300" y="132" text-anchor="middle" font-family="Arial" font-size="10" fill="#2c3e50">user_id</text>
+  <circle cx="260" cy="140" r="4" fill="#2c3e50"/>
+  <path d="M 336 140 L 328 136 L 328 144 Z" fill="#2c3e50"/>
+
+  <!-- legend -->
+  <rect x="620" y="80" width="180" height="130" fill="#fff" stroke="#ccc" rx="4"/>
+  <text x="635" y="102" font-family="Arial" font-size="12" font-weight="bold">Join keys</text>
+  <text x="635" y="122" font-family="Arial" font-size="11">orders.user_id</text>
+  <text x="635" y="138" font-family="Arial" font-size="11">  ’ user_departments.user_id</text>
+  <text x="635" y="162" font-family="Arial" font-size="11">products is not joined</text>
+  <text x="635" y="178" font-family="Arial" font-size="11">at query time  department</text>
+  <text x="635" y="194" font-family="Arial" font-size="11">info pre-aggregated in ETL</text>
+</svg>
