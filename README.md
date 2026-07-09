@@ -94,7 +94,7 @@ A few details that tripped me up at first:
 
 ### After ETL (what the SQL queries use)
 
-![Analytical ERD — SQLite tables after ETL](assets/erd_analytical_instacart.png)
+![Analytical ERD - SQLite tables after ETL](assets/erd_analytical_instacart.png)
 
 Main join: `orders.user_id` → `user_departments.user_id`. Department-level stats are pre-aggregated so the analysis queries don't need to touch 33M rows.
 
@@ -172,6 +172,7 @@ Customer-Behavior-Case-Study/
 ├── assets/
 │   ├── erd_raw_instacart.png              # raw Kaggle source ERD
 │   ├── erd_analytical_instacart.png       # analytical SQLite ERD (after ETL)
+│   ├── erd_analytical_instacart.svg       # same diagram (vector version)
 │   └── reorder_rate_by_department.svg
 ├── sql/                     # schema checks + analysis queries
 ├── scripts/                 # ETL and chart generation

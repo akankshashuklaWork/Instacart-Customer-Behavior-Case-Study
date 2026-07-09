@@ -1,55 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="420" viewBox="0 0 820 420">
-  <rect width="100%" height="100%" fill="#fafafa"/>
-  <text x="20" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Analytical Database ERD (instacart.db  after ETL)</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760">
+  <defs>
+    <style>
+      .title { font: 700 26px Arial, sans-serif; fill: #111; }
+      .subtitle { font: 400 14px Arial, sans-serif; fill: #555; }
+      .tbl-title { font: 700 16px Arial, sans-serif; fill: #fff; }
+      .col-name { font: 600 13px Courier New, monospace; fill: #222; }
+      .col-type { font: 400 13px Courier New, monospace; fill: #555; }
+      .row-count { font: 400 12px Arial, sans-serif; fill: #666; }
+      .rel-label { font: 600 13px Arial, sans-serif; fill: #2c3e50; }
+      .note-title { font: 700 14px Arial, sans-serif; fill: #222; }
+      .note-body { font: 400 13px Arial, sans-serif; fill: #444; }
+    </style>
+  </defs>
 
-  <!-- orders table -->
-  <rect x="40" y="60" width="220" height="200" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="4"/>
-  <rect x="40" y="60" width="220" height="28" fill="#3498db"/>
-  <text x="150" y="79" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">orders</text>
-  <text x="52" y="105" font-family="monospace" font-size="11">order_id (PK)</text>
-  <text x="52" y="122" font-family="monospace" font-size="11">user_id</text>
-  <text x="52" y="139" font-family="monospace" font-size="11">order_number</text>
-  <text x="52" y="156" font-family="monospace" font-size="11">cart_size</text>
-  <text x="52" y="173" font-family="monospace" font-size="11">reordered_items</text>
-  <text x="52" y="190" font-family="monospace" font-size="11">reorder_rate</text>
-  <text x="52" y="207" font-family="monospace" font-size="11">days_since_prior_order</text>
-  <text x="52" y="224" font-family="monospace" font-size="11">order_dow, order_hour</text>
-  <text x="52" y="241" font-family="monospace" font-size="11">distinct_departments</text>
-  <text x="150" y="252" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">3.4M rows</text>
+  <rect width="100%" height="100%" fill="#ffffff"/>
 
-  <!-- user_departments table -->
-  <rect x="340" y="80" width="240" height="160" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="4"/>
-  <rect x="340" y="80" width="240" height="28" fill="#27ae60"/>
-  <text x="460" y="99" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">user_departments</text>
-  <text x="352" y="125" font-family="monospace" font-size="11">user_id (FK)</text>
-  <text x="352" y="142" font-family="monospace" font-size="11">department</text>
-  <text x="352" y="159" font-family="monospace" font-size="11">items</text>
-  <text x="352" y="176" font-family="monospace" font-size="11">reorders</text>
-  <text x="352" y="193" font-family="monospace" font-size="11">reorder_rate</text>
-  <text x="352" y="210" font-family="monospace" font-size="11">orders_with_dept</text>
-  <text x="460" y="228" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">2.3M rows</text>
+  <text x="640" y="42" text-anchor="middle" class="title">ANALYTICAL DATABASE ERD</text>
+  <text x="640" y="68" text-anchor="middle" class="subtitle">instacart.db - tables used for SQL analysis (after ETL)</text>
 
-  <!-- products table -->
-  <rect x="340" y="280" width="240" height="120" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="4"/>
-  <rect x="340" y="280" width="240" height="28" fill="#9b59b6"/>
-  <text x="460" y="299" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">products</text>
-  <text x="352" y="325" font-family="monospace" font-size="11">product_id (PK)</text>
-  <text x="352" y="342" font-family="monospace" font-size="11">product_name</text>
-  <text x="352" y="359" font-family="monospace" font-size="11">aisle, department</text>
-  <text x="460" y="388" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">49K rows (standalone dimension)</text>
+  <g id="orders">
+    <rect x="60" y="110" width="300" height="34" fill="#1f4e79" stroke="#111" stroke-width="1.5"/>
+    <text x="210" y="133" text-anchor="middle" class="tbl-title">ORDERS</text>
+    <rect x="60" y="144" width="300" height="320" fill="#fff" stroke="#111" stroke-width="1.5"/>
+    <line x1="60" y1="176" x2="360" y2="176" stroke="#dddddd"/>
 
-  <!-- relationship: orders -> user_departments -->
-  <line x1="260" y1="140" x2="340" y2="140" stroke="#2c3e50" stroke-width="2"/>
-  <text x="300" y="132" text-anchor="middle" font-family="Arial" font-size="10" fill="#2c3e50">user_id</text>
-  <circle cx="260" cy="140" r="4" fill="#2c3e50"/>
-  <path d="M 336 140 L 328 136 L 328 144 Z" fill="#2c3e50"/>
+    <text x="76" y="168" class="col-name">order_id</text><text x="250" y="168" class="col-type">int</text>
+    <text x="76" y="196" class="col-name">user_id</text><text x="250" y="196" class="col-type">int</text>
+    <text x="76" y="224" class="col-name">order_number</text><text x="250" y="224" class="col-type">int</text>
+    <text x="76" y="252" class="col-name">cart_size</text><text x="250" y="252" class="col-type">int</text>
+    <text x="76" y="280" class="col-name">reordered_items</text><text x="250" y="280" class="col-type">int</text>
+    <text x="76" y="308" class="col-name">reorder_rate</text><text x="250" y="308" class="col-type">float</text>
+    <text x="76" y="336" class="col-name">days_since_prior_order</text><text x="250" y="336" class="col-type">float</text>
+    <text x="76" y="364" class="col-name">order_dow</text><text x="250" y="364" class="col-type">int</text>
+    <text x="76" y="392" class="col-name">order_hour_of_day</text><text x="250" y="392" class="col-type">int</text>
+    <text x="76" y="420" class="col-name">distinct_departments</text><text x="250" y="420" class="col-type">int</text>
 
-  <!-- legend -->
-  <rect x="620" y="80" width="180" height="130" fill="#fff" stroke="#ccc" rx="4"/>
-  <text x="635" y="102" font-family="Arial" font-size="12" font-weight="bold">Join keys</text>
-  <text x="635" y="122" font-family="Arial" font-size="11">orders.user_id</text>
-  <text x="635" y="138" font-family="Arial" font-size="11">  ’ user_departments.user_id</text>
-  <text x="635" y="162" font-family="Arial" font-size="11">products is not joined</text>
-  <text x="635" y="178" font-family="Arial" font-size="11">at query time  department</text>
-  <text x="635" y="194" font-family="Arial" font-size="11">info pre-aggregated in ETL</text>
+    <line x1="60" y1="440" x2="360" y2="440" stroke="#dddddd"/>
+    <text x="210" y="462" text-anchor="middle" class="row-count">3.4M rows | one row per order</text>
+  </g>
+
+  <g id="user_departments">
+    <rect x="560" y="110" width="320" height="34" fill="#2e7d32" stroke="#111" stroke-width="1.5"/>
+    <text x="720" y="133" text-anchor="middle" class="tbl-title">USER_DEPARTMENTS</text>
+    <rect x="560" y="144" width="320" height="250" fill="#fff" stroke="#111" stroke-width="1.5"/>
+    <line x1="560" y1="176" x2="880" y2="176" stroke="#dddddd"/>
+
+    <text x="576" y="168" class="col-name">user_id</text><text x="770" y="168" class="col-type">int</text>
+    <text x="576" y="196" class="col-name">department</text><text x="770" y="196" class="col-type">text</text>
+    <text x="576" y="224" class="col-name">items</text><text x="770" y="224" class="col-type">int</text>
+    <text x="576" y="252" class="col-name">reorders</text><text x="770" y="252" class="col-type">int</text>
+    <text x="576" y="280" class="col-name">reorder_rate</text><text x="770" y="280" class="col-type">float</text>
+    <text x="576" y="308" class="col-name">orders_with_dept</text><text x="770" y="308" class="col-type">int</text>
+
+    <line x1="560" y1="328" x2="880" y2="328" stroke="#dddddd"/>
+    <text x="720" y="350" text-anchor="middle" class="row-count">2.3M rows | one row per user x department</text>
+  </g>
+
+  <g id="products">
+    <rect x="560" y="430" width="320" height="34" fill="#6a1b9a" stroke="#111" stroke-width="1.5"/>
+    <text x="720" y="453" text-anchor="middle" class="tbl-title">PRODUCTS</text>
+    <rect x="560" y="464" width="320" height="190" fill="#fff" stroke="#111" stroke-width="1.5"/>
+    <line x1="560" y1="496" x2="880" y2="496" stroke="#dddddd"/>
+
+    <text x="576" y="488" class="col-name">product_id</text><text x="770" y="488" class="col-type">int</text>
+    <text x="576" y="516" class="col-name">product_name</text><text x="770" y="516" class="col-type">text</text>
+    <text x="576" y="544" class="col-name">aisle</text><text x="770" y="544" class="col-type">text</text>
+    <text x="576" y="572" class="col-name">department</text><text x="770" y="572" class="col-type">text</text>
+
+    <line x1="560" y1="592" x2="880" y2="592" stroke="#dddddd"/>
+    <text x="720" y="614" text-anchor="middle" class="row-count">49K rows | product catalog (dimension table)</text>
+  </g>
+
+  <line x1="360" y1="196" x2="470" y2="196" stroke="#2c3e50" stroke-width="2"/>
+  <text x="415" y="186" text-anchor="middle" class="rel-label">user_id</text>
+  <path d="M470,196 L458,190 M470,196 L458,202 M470,196 L482,196" stroke="#2c3e50" stroke-width="2" fill="none"/>
+  <line x1="360" y1="190" x2="360" y2="202" stroke="#2c3e50" stroke-width="2"/>
+
+  <line x1="720" y1="464" x2="720" y2="394" stroke="#888888" stroke-width="1.5" stroke-dasharray="8,5"/>
+  <text x="735" y="430" class="note-body" fill="#666666">department</text>
+  <text x="735" y="448" class="note-body" fill="#666666">(used at ETL)</text>
+
+  <rect x="940" y="130" width="300" height="220" fill="#f8f9fa" stroke="#cccccc" stroke-width="1" rx="6"/>
+  <text x="960" y="158" class="note-title">How these tables connect</text>
+  <text x="960" y="186" class="note-body">- orders and user_departments</text>
+  <text x="976" y="206" class="note-body">join on user_id</text>
+  <text x="960" y="234" class="note-body">- products is not joined at</text>
+  <text x="976" y="254" class="note-body">query time; department stats</text>
+  <text x="976" y="274" class="note-body">are pre-aggregated in ETL</text>
+  <text x="960" y="302" class="note-body">- avoids scanning 33M</text>
+  <text x="976" y="322" class="note-body">line-item rows in SQL</text>
+
+  <rect x="940" y="400" width="300" height="100" fill="#f8f9fa" stroke="#cccccc" stroke-width="1" rx="6"/>
+  <text x="960" y="428" class="note-title">Notation</text>
+  <line x1="960" y1="448" x2="990" y2="448" stroke="#2c3e50" stroke-width="2"/>
+  <text x="1000" y="453" class="note-body">solid line = SQL join key</text>
+  <line x1="960" y1="472" x2="990" y2="472" stroke="#888888" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="1000" y="477" class="note-body">dashed line = ETL-only link</text>
 </svg>
