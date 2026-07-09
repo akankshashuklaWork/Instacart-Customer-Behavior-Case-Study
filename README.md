@@ -1,298 +1,186 @@
 # Instacart Customer Behavior Case Study
 
-## Business Question
+## The question I set out to answer
 
-**Instacart wants to know which customers are at risk of churning, and what product categories drive repeat purchases.**
+Instacart makes money when people come back and reorder. So I wanted to answer two things:
 
-This analysis uses SQL on 3.4 million orders from 206,209 users to:
-1. Flag customers whose ordering gap has grown beyond their personal norm (churn risk)
-2. Identify which grocery departments have the highest repeat-purchase rates (retention levers)
+1. **Who looks like they're about to stop ordering?**
+2. **Which product categories actually bring people back?**
 
-Every query below exists to answer one of those two questions — not to explore data for its own sake.
-
----
-
-## Key Findings & Recommendations
-
-### 1. 22.8% of customers show churn signals on their latest order
-
-**Finding:** 47,109 users (22.8%) placed their most recent order after a gap that is **1.5× or more** their historical average. These customers haven't left yet, but their behavior is diverging from their norm.
-
-**Recommendation:** Instacart should trigger a re-engagement email or push notification for this ~23% cohort — offering a staple-item discount in their most-reordered department — before they fully lapse.
+I used SQL on the public Instacart dataset — 3.4 million orders across 206,209 users — and built a small pipeline to get from raw CSVs to something I could actually query without waiting ten minutes per join.
 
 ---
 
-### 2. Dairy, beverages, and produce drive repeat purchases
+## What I found
 
-**Finding:** Staple departments lead on reorder rate: **dairy & eggs (67.0%)**, **beverages (65.4%)**, **produce (65.1%)**. Low-reorder categories include **personal care (32.2%)** and **pantry (34.7%)**. Overall reorder rate is **59.0%**.
+### About 1 in 4 customers are showing early churn signals
+
+47,109 users (22.8%) took noticeably longer to place their most recent order than they usually do. Their latest gap was at least 1.5× their own historical average. They haven't disappeared yet — but something changed.
+
+If I were advising Instacart, I'd send this group a re-engagement nudge now — maybe a discount on whatever they reorder most — before they go quiet for good.
+
+---
+
+### Staples drive repeat behavior; personal care doesn't
+
+People reorder staples constantly. Dairy & eggs (67%), beverages (65%), and produce (65%) have the highest repeat rates. Personal care (32%) and pantry items (35%) are much lower. Across the whole dataset, 59% of purchased items are reorders.
 
 ![Reorder rate by department](assets/reorder_rate_by_department.svg)
 
-**Recommendation:** Build replenishment reminders and "buy again" prompts around high-reorder staples. For low-reorder categories, use discovery-focused recommendations instead of replenishment flows.
+That lines up with how people actually shop groceries — you rebuy milk every week, not shampoo. Replenishment reminders make sense for dairy and produce. For personal care, discovery-style recommendations are probably a better fit.
 
 ---
 
-### 3. Heavy shoppers reorder at 2.3× the rate of light shoppers
+### Loyalty builds over time
 
-**Finding:** Users with 16+ orders reorder **67.0%** of items. Users with only 4–6 orders reorder **28.6%**. The jump happens between the "regular" tier (7–15 orders, 44.5%) and heavy tier.
+Shoppers with 16+ orders reorder 67% of their items. Shoppers with only 4–6 orders reorder just 29%. There's a real jump once someone crosses into the 7–15 order range (45% reorder rate).
 
-**Recommendation:** Focus onboarding incentives on orders 4–7 to push light shoppers into habitual reorder behavior before they plateau.
-
----
-
-### 4. Retention drops sharply after order 5
-
-**Finding:** 100% of users reach order 4, but only **88.4%** reach order 5 and **53.7%** reach order 10. The steepest drop is between orders 4 and 5.
-
-**Recommendation:** Introduce a milestone reward at order 5 (free delivery, category discount) to reduce early-stage attrition.
+Worth paying attention to orders 4 through 7 — that's where someone goes from trying Instacart to actually relying on it.
 
 ---
 
-### 5. 47,804 users are in the "Lapsed" RFM segment
+### Drop-off happens around the 5th order
 
-**Finding:** RFM segmentation (recency, frequency, monetary volume) places **23.2%** of users in the Lapsed segment — long gaps between orders despite prior activity.
+Everyone in this dataset has at least 4 orders. But only 88% make it to a 5th, and just 54% reach 10. The biggest cliff is between orders 4 and 5.
 
-**Recommendation:** Combine RFM Lapsed tagging with the 1.5× gap rule from Finding 1 to prioritize win-back campaigns by expected lifetime value.
+A small incentive at order 5 — free delivery, a category discount — could be worth testing.
 
 ---
 
-## Methodology
+### RFM flagged 48K users as "lapsed"
 
-### Data source
+I ran a basic RFM segmentation (recency, frequency, how many items someone buys). About 23% of users landed in a Lapsed bucket — they've ordered plenty before, but the gaps between orders are getting long.
 
-[Instacart Market Basket Analysis](https://www.kaggle.com/c/instacart-market-basket-analysis) — 3.4M orders, 33.8M order line items, 49,688 products, 21 departments.
+I'd cross-reference that list with the 1.5× gap rule above and prioritize outreach to the people who were most active before they slowed down.
 
-Raw CSVs live in `../Instacart/`. Python ETL aggregates line items into analytical tables loaded into SQLite (`data/instacart.db`).
+---
 
-### Assumptions
+## How I approached it
 
-| Assumption | Rationale |
+**Dataset:** [Instacart Market Basket Analysis on Kaggle](https://www.kaggle.com/c/instacart-market-basket-analysis)
+
+A few things worth knowing if you're reading the SQL:
+
+- There's no revenue or pricing data — so I used item counts instead of dollars where "monetary value" comes up.
+- There are no real calendar dates — just `days_since_prior_order` and `order_number`. Cohort analysis is based on order sequence, not months.
+- The dataset only includes users with at least 4 orders (it's from a Kaggle competition), so I can't analyze true first-time buyers who never came back.
+- I combined both `order_products__prior` and `order_products__train` to get the full order history. The train/test split was built for prediction, not for this kind of analysis.
+- I defined "churn risk" as: someone's latest order gap is 50%+ longer than their own average. It's a proxy — we can't see what happened after the data ends.
+
+**Workflow:** check the schema first → confirm row counts and reorder rates look sane → then run the actual analysis. I didn't want to build a fancy churn query on top of bad joins.
+
+---
+
+## Data model
+
+The Kaggle files and what I actually query look different — and that's intentional.
+
+The raw data has 33.8 million line items spread across `order_products__prior` and `order_products__train`. Joining that in SQLite for every query would be painfully slow. So I aggregated in Python first:
+
+- **orders** — one row per order, with cart size and reorder rate already calculated
+- **user_departments** — one row per user per department, with item and reorder counts
+- **products** — product catalog with aisle and department names joined in
+
+### Raw source (Kaggle)
+
+![Raw Instacart ERD](assets/erd_raw_instacart.png)
+
+Six tables: `orders`, `order_products__prior`, `order_products__train`, `products`, `aisles`, `departments`.
+
+A few details that tripped me up at first:
+- An order shows up in either `prior` or `train`, not both
+- `test` orders have no line items in either file
+- There's no separate users table — just `user_id` on orders
+
+### After ETL (what the SQL queries use)
+
+![Analytical ERD — SQLite tables after ETL](assets/erd_analytical_instacart.png)
+
+Main join: `orders.user_id` → `user_departments.user_id`. Department-level stats are pre-aggregated so the analysis queries don't need to touch 33M rows.
+
+<details>
+<summary>Mermaid diagrams (if you prefer those)</summary>
+
+**Raw source:**
+
+```mermaid
+erDiagram
+    orders ||--o{ order_products_prior : order_id
+    orders ||--o{ order_products_train : order_id
+    products ||--o{ order_products_prior : product_id
+    products ||--o{ order_products_train : product_id
+    aisles ||--o{ products : aisle_id
+    departments ||--o{ products : department_id
+```
+
+**After ETL:**
+
+```mermaid
+erDiagram
+    orders ||--o{ user_departments : user_id
+```
+
+</details>
+
+---
+
+## SQL files
+
+| File | What it does |
 |---|---|
-| **Prior + train order products combined** | Both files are needed for complete order history. The train/test split was designed for ML prediction, not behavioral analysis. |
-| **No revenue data** | Instacart dataset has no prices. "Monetary" in RFM = total items purchased, not dollars. |
-| **No calendar dates** | Dataset uses `days_since_prior_order` and `order_number` instead of timestamps. Cohort analysis uses order-sequence milestones, not calendar months. |
-| **Minimum 4 orders per user** | The public dataset only includes users with repeat purchase history (min 4 orders). Single-order churn cannot be measured. |
-| **Churn proxy = 1.5× gap rule** | A customer's latest inter-order gap exceeding 150% of their historical average is used as a leading churn indicator, since we cannot observe true post-dataset churn. |
-| **Reorder rate validation** | Every rate is computed as `reordered_items / cart_size` at order level. Rates are validated to stay within 0–100% to catch join blowups. |
+| [`sql/00_schema_exploration.sql`](sql/00_schema_exploration.sql) | Run this first — row counts, sample data, null checks |
+| [`sql/analysis_queries.sql`](sql/analysis_queries.sql) | The actual analysis, in order: sanity checks → baseline → repeat purchases → churn → segmentation |
 
-### Analytical approach
-
-```
-Schema verification → Baseline sanity checks → Repeat purchase analysis → Churn risk → Segmentation
-```
-
-Queries are in [`sql/`](sql/) and follow this progression deliberately. Part A must pass before Part D results are trusted.
+Each query has a comment explaining why it exists and what range of results to expect.
 
 ---
 
-## Entity Relationship Diagrams
+## Running it locally
 
-This project uses **two different schemas** at two different stages. Both are correct — they answer different questions.
-
-### Why are there two ERDs?
-
-| | Raw source ERD | Analytical ERD |
-|---|---|---|
-| **Shows** | Original Kaggle CSV files | SQLite tables after ETL |
-| **Like** | Grocery store inventory system | Manager's weekly report |
-| **Grain** | One row per item scanned (33.8M line items) | One row per order, or per user × department |
-| **Purpose** | Store every transaction | Answer business questions fast |
-| **Used by** | Data engineers loading data | Analysts writing SQL |
-
-```
-Raw Kaggle CSVs  →  [ETL pipeline]  →  Analytical SQLite DB  →  SQL queries
-     ↑                                        ↑
-  Raw ERD                              Analytical ERD
-```
-
-**What the ETL changes:**
-
-| Raw table | Problem for analysis | What we built |
-|---|---|---|
-| `order_products__prior` + `order_products__train` (33.8M rows) | Too large for SQLite; slow joins | Aggregated into `orders` (cart_size, reorder_rate) and `user_departments` |
-| `products` + `aisles` + `departments` (3 tables) | Requires joins every query | Flattened into one `products` table; department stats pre-aggregated into `user_departments` |
-| No user-level summary | Every query would re-scan 33M rows | Pre-built `user_departments` at user × department grain |
-
----
-
-### 1. Raw source data (Kaggle CSVs)
-
-This is how Instacart published the data. Six tables, fully normalized.
-
-![Raw Instacart ERD — Kaggle source tables](assets/erd_raw_instacart.png)
-
-**Key relationships:**
-- `orders` → `order_products__prior` and `order_products__train` on `order_id`
-- `products` → both order-product tables on `product_id`
-- `aisles` → `products` on `aisle_id`
-- `departments` → `products` on `department_id`
-
-**Important nuances:**
-- An order appears in **either** `prior` or `train`, not both (based on `eval_set`)
-- `test` orders have no rows in either order-products table
-- There is **no `users` table** — `user_id` is a column in `orders` only
-
-<details>
-<summary>Mermaid version (raw source)</summary>
-
-```mermaid
-erDiagram
-    orders ||--o{ order_products_prior : "order_id"
-    orders ||--o{ order_products_train : "order_id"
-    products ||--o{ order_products_prior : "product_id"
-    products ||--o{ order_products_train : "product_id"
-    aisles ||--o{ products : "aisle_id"
-    departments ||--o{ products : "department_id"
-
-    orders {
-        int order_id PK
-        int user_id
-        string eval_set
-        int order_number
-        int order_dow
-        int order_hour_of_day
-        float days_since_prior_order
-    }
-
-    order_products_prior {
-        int order_id FK
-        int product_id FK
-        int add_to_cart_order
-        int reordered
-    }
-
-    products {
-        int product_id PK
-        string product_name
-        int aisle_id FK
-        int department_id FK
-    }
-```
-
-</details>
-
----
-
-### 2. Analytical database (SQLite — `instacart.db`)
-
-Built by the Python ETL pipeline. Line items are aggregated to keep queries fast.
-
-![Analytical ERD — SQLite tables after ETL](assets/erd_analytical_instacart.svg)
-
-**Join keys:**
-- `orders.user_id` → `user_departments.user_id` (one user, many orders and many department rows)
-- `products` is a standalone dimension table — department info is pre-aggregated into `user_departments` at ETL time, so analysis queries do not need 33M-row joins
-
-<details>
-<summary>Mermaid version (analytical)</summary>
-
-```mermaid
-erDiagram
-    orders ||--o{ user_departments : "user_id"
-
-    orders {
-        int order_id PK
-        int user_id
-        int order_number
-        int cart_size
-        int reordered_items
-        float reorder_rate
-        float days_since_prior_order
-        int order_dow
-        int order_hour_of_day
-        int distinct_departments
-    }
-
-    user_departments {
-        int user_id
-        string department
-        int items
-        int reorders
-        float reorder_rate
-        int orders_with_dept
-    }
-
-    products {
-        int product_id PK
-        string product_name
-        string aisle
-        string department
-    }
-```
-
-</details>
-
----
-
-## SQL Files
-
-| File | Purpose | When to run |
-|---|---|---|
-| [`sql/00_schema_exploration.sql`](sql/00_schema_exploration.sql) | Row counts, sample rows, null checks, join integrity, reorder rate bounds | **First** — before any analysis |
-| [`sql/analysis_queries.sql`](sql/analysis_queries.sql) | 13 queries in 5 parts: sanity → baseline → repeat drivers → churn → segmentation | After schema checks pass |
-
-Each query includes a **WHY** comment explaining the business purpose and a **VALIDATION** note with expected ranges.
-
----
-
-## How to Run
-
-### Prerequisites
-
-- Python 3.10+
-- Instacart raw CSVs in `../Instacart/`
-
-### Setup
+You'll need Python 3.10+ and the Instacart CSVs in `../Instacart/`.
 
 ```bash
 cd Customer-Behavior-Case-Study
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-bash run_pipeline.sh          # ETL (~6 min) + build DB + chart
+bash run_pipeline.sh
 ```
 
-### Run SQL
+The ETL step takes about 6 minutes — it's chewing through 33.8M line items.
+
+Then run the SQL:
 
 ```bash
-# Step 1: Verify schema
 sqlite3 data/instacart.db < sql/00_schema_exploration.sql
-
-# Step 2: Run analysis
 sqlite3 data/instacart.db < sql/analysis_queries.sql
 ```
 
-### Verify data loaded
+Quick sanity check:
 
 ```sql
 SELECT COUNT(*), COUNT(DISTINCT user_id) FROM orders;
--- Expected: 3421083 | 206209
+-- should return: 3421083 | 206209
 ```
 
 ---
 
-## Project Structure
+## Project layout
 
 ```
 Customer-Behavior-Case-Study/
-├── README.md                          ← business question + findings + ERDs
+├── README.md
 ├── assets/
-│   ├── erd_raw_instacart.png          ← raw Kaggle source ERD
-│   ├── erd_analytical_instacart.svg   ← analytical SQLite ERD (after ETL)
-│   └── reorder_rate_by_department.svg ← key visual
-├── sql/
-│   ├── 00_schema_exploration.sql      ← run first
-│   └── analysis_queries.sql           ← 13 queries, 5 parts
-├── scripts/
-│   ├── 01_clean_data.py               ← ETL from raw Instacart CSVs
-│   ├── 02_build_sql_db.py             ← load SQLite
-│   └── 03_generate_chart.py           ← department reorder chart
-├── data/
-│   └── instacart.db                   ← analytical database
+│   ├── erd_raw_instacart.png              # raw Kaggle source ERD
+│   ├── erd_analytical_instacart.png       # analytical SQLite ERD (after ETL)
+│   └── reorder_rate_by_department.svg
+├── sql/                     # schema checks + analysis queries
+├── scripts/                 # ETL and chart generation
+├── data/                    # generated by pipeline (not in git — too large)
 └── run_pipeline.sh
 ```
 
 ---
 
-**Author:** Akanksha Shukla · **July 2026**
+**Akanksha Shukla** · July 2026
 
-**Dataset:** [Instacart Market Basket Analysis (Kaggle)](https://www.kaggle.com/c/instacart-market-basket-analysis)
+Dataset: [Instacart Market Basket Analysis (Kaggle)](https://www.kaggle.com/c/instacart-market-basket-analysis)
