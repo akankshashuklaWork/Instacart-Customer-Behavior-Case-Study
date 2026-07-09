@@ -99,23 +99,9 @@ A few details that tripped me up at first:
 Main join: `orders.user_id` → `user_departments.user_id`. Department-level stats are pre-aggregated so the analysis queries don't need to touch 33M rows.
 
 <details>
-<summary>Mermaid diagrams (if you prefer those)</summary>
 
-**Raw source:**
-
-```mermaid
-erDiagram
-    orders ||--o{ order_products_prior : order_id
-    orders ||--o{ order_products_train : order_id
-    products ||--o{ order_products_prior : product_id
-    products ||--o{ order_products_train : product_id
-    aisles ||--o{ products : aisle_id
-    departments ||--o{ products : department_id
-```
 
 **After ETL:**
-
-</details>
 
 ---
 
