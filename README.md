@@ -115,11 +115,6 @@ erDiagram
 
 **After ETL:**
 
-```mermaid
-erDiagram
-    orders ||--o{ user_departments : user_id
-```
-
 </details>
 
 ---
